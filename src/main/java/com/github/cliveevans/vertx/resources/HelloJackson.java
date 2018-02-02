@@ -9,7 +9,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-@Path("/v1")
+@Path("/v1/local")
 public class HelloJackson {
 
     @Path("/sync")

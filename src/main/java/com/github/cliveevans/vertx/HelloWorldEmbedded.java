@@ -3,6 +3,7 @@ package com.github.cliveevans.vertx;
 import com.englishtown.vertx.hk2.HK2JerseyBinder;
 import com.englishtown.vertx.hk2.HK2VertxBinder;
 import com.englishtown.vertx.jersey.JerseyServer;
+import com.github.cliveevans.vertx.context.WebClientContextBinder;
 import com.github.cliveevans.vertx.resources.HelloJackson;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
@@ -27,11 +28,11 @@ public class HelloWorldEmbedded {
                             .put("port", 8080)
                             .put("packages", packages));
 
-            // Use a service locator (HK2 or Guice are supported by default) to create the jersey server
-            ServiceLocator locator = ServiceLocatorUtilities.bind(new HK2JerseyBinder(), new HK2VertxBinder(vertx));
+            ServiceLocator locator = ServiceLocatorUtilities
+                    .bind(new HK2JerseyBinder(), new HK2VertxBinder(vertx), new WebClientContextBinder(vertx));
+
             JerseyServer server = locator.getService(JerseyServer.class);
 
-            // Start the server which simply returns "Hello World!" to each GET request.
             server.start();
 
         });
