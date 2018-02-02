@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.cliveevans</groupId>
+    <artifactId>jersey-vertx-experiment</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <vertx.version>3.5.0</vertx.version>
+        <vertx.hk2.version>2.5.0</vertx.hk2.version>
+        <vertx.when.version>4.2.0</vertx.when.version>
+        <vertx.jersey.version>4.7.0</vertx.jersey.version>
+
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <jersey.version>2.25.1</jersey.version>
+        <guava.version>24.0-jre</guava.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.englishtown.vertx</groupId>
+            <artifactId>vertx-hk2</artifactId>
+            <version>${vertx.hk2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.englishtown.vertx</groupId>
+            <artifactId>vertx-jersey</artifactId>
+            <version>${vertx.jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.englishtown.vertx</groupId>
+            <artifactId>vertx-jersey-jackson</artifactId>
+            <version>${vertx.jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>com.github.cliveevans.vertx.HelloWorldEmbedded</Main-Class>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                            <outputFile>${project.build.directory}/maven-simplest-${project.version}-fat.jar
+                            </outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
