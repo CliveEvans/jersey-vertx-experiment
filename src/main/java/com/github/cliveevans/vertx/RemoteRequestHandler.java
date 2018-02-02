@@ -21,7 +21,7 @@ public class RemoteRequestHandler implements Handler<AsyncResult<HttpResponse<Bu
     }
 
     public RemoteRequestHandler(AsyncResponse async) {
-        this(response -> async.resume(response));
+        this(async::resume);
     }
 
     @Override
@@ -30,9 +30,9 @@ public class RemoteRequestHandler implements Handler<AsyncResult<HttpResponse<Bu
             logger.info("It worked, maybe");
             int statusCode = event.result().statusCode();
             if (statusCode < 300) {
-                handler.handle(Response.ok(event.result().bodyAsJsonObject()).build());
+                handler.handle(Response.status(statusCode).entity(event.result().bodyAsJsonObject()).build());
             } else {
-                logger.warn("I lied: status was {}", statusCode);
+                logger.warn("I lied: status was {0}", statusCode);
                 JsonObject responseObject = new JsonObject()
                         .put("remote_error", event.result().bodyAsString())
                         .put("remote_status", statusCode);
