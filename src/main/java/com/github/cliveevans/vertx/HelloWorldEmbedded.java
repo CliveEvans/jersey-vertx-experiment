@@ -1,8 +1,12 @@
 package com.github.cliveevans.vertx;
 
+import com.beust.jcommander.JCommander;
 import com.englishtown.vertx.hk2.HK2JerseyBinder;
 import com.englishtown.vertx.hk2.HK2VertxBinder;
 import com.englishtown.vertx.jersey.JerseyServer;
+import com.englishtown.vertx.promises.hk2.HK2WhenBinder;
+import com.github.cliveevans.vertx.context.ContextBinders;
+import com.github.cliveevans.vertx.context.ProxyParameters;
 import com.github.cliveevans.vertx.context.WebClientContextBinder;
 import com.github.cliveevans.vertx.resources.HelloJackson;
 import io.vertx.core.Vertx;
@@ -15,8 +19,15 @@ public class HelloWorldEmbedded {
 
     public static void main(String[] args) {
 
-        Vertx vertx = Vertx.vertx();
 
+        ProxyParameters proxyParameters = new ProxyParameters();
+
+        JCommander.newBuilder()
+                .addObject(proxyParameters)
+                .build()
+                .parse(args);
+
+        Vertx vertx = Vertx.vertx();
         vertx.runOnContext(aVoid -> {
 
             // Set up the jersey configuration
@@ -29,7 +40,7 @@ public class HelloWorldEmbedded {
                             .put("packages", packages));
 
             ServiceLocator locator = ServiceLocatorUtilities
-                    .bind(new HK2JerseyBinder(), new HK2VertxBinder(vertx), new WebClientContextBinder(vertx));
+                    .bind(new HK2JerseyBinder(), new HK2VertxBinder(vertx), new WebClientContextBinder(vertx, proxyParameters), new HK2WhenBinder(), new ContextBinders());
 
             JerseyServer server = locator.getService(JerseyServer.class);
 
