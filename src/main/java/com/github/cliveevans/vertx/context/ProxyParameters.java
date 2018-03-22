@@ -31,7 +31,7 @@ public class ProxyParameters {
                     .setUsername(proxyUser)
                     .setPassword(proxyPass);
         } else {
-            return new ProxyOptions();
+            return null;
         }
     }
 
